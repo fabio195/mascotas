@@ -3,6 +3,13 @@
 
 Microservicio de Autentificación
 
+- [Eventos](#eventos)
+	- [Actualizar Evento](#actualizar-evento)
+	- [Buscar Evento](#buscar-evento)
+	- [Crear Evento](#crear-evento)
+	- [Eliminar Evento](#eliminar-evento)
+	- [Guardar Imagen del Evento](#guardar-imagen-del-evento)
+	
 - [Imagen](#imagen)
 	- [Guardar Imagen](#guardar-imagen)
 	- [Obtener Imagen](#obtener-imagen)
@@ -39,6 +46,319 @@ Microservicio de Autentificación
 	
 
 
+# <a name='eventos'></a> Eventos
+
+## <a name='actualizar-evento'></a> Actualizar Evento
+[Back to top](#top)
+
+<p>Actualiza los datos de un Evento.</p>
+
+	POST /v1/evento/:eventoId
+
+
+
+### Examples
+
+Evento
+
+```
+{
+  "id": "Id del evento"
+  "titulo": "Nombre del evento",
+  "descripcion": "Descripción del evento",
+  "fechaEvento": date (DD/MM/YYYY),
+  "lugarEvento": "Lugar en donde se llevará a cabo el evento"
+}
+```
+Header Autorización
+
+```
+Authorization=bearer {token}
+```
+
+
+### Success Response
+
+Evento
+
+```
+{
+  "id": "Id del evento"
+  "titulo": "Nombre del evento",
+  "descripcion": "Descripción del evento",
+  "fechaEvento": date (DD/MM/YYYY),
+  "lugarEvento": "Lugar en donde se llevará a cabo el evento"
+}
+```
+
+
+### Error Response
+
+401 Unauthorized
+
+```
+HTTP/1.1 401 Unauthorized
+```
+400 Bad Request
+
+```
+HTTP/1.1 400 Bad Request
+{
+   "messages" : [
+     {
+       "path" : "{Nombre de la propiedad}",
+       "message" : "{Motivo del error}"
+     },
+     ...
+  ]
+}
+```
+500 Server Error
+
+```
+HTTP/1.1 500 Internal Server Error
+{
+   "error" : "Not Found"
+}
+```
+## <a name='buscar-evento'></a> Buscar Evento
+[Back to top](#top)
+
+<p>Busca un Evento por id.</p>
+
+	GET /v1/evento/:eventoId
+
+
+
+### Examples
+
+Header Autorización
+
+```
+Authorization=bearer {token}
+```
+
+
+### Success Response
+
+Evento
+
+```
+{
+  "id": "Id del evento"
+  "titulo": "Nombre del evento",
+  "descripcion": "Descripción del evento",
+  "fechaEvento": date (DD/MM/YYYY),
+  "lugarEvento": "Lugar en donde se llevará a cabo el evento"
+}
+```
+
+
+### Error Response
+
+401 Unauthorized
+
+```
+HTTP/1.1 401 Unauthorized
+```
+400 Bad Request
+
+```
+HTTP/1.1 400 Bad Request
+{
+   "messages" : [
+     {
+       "path" : "{Nombre de la propiedad}",
+       "message" : "{Motivo del error}"
+     },
+     ...
+  ]
+}
+```
+500 Server Error
+
+```
+HTTP/1.1 500 Internal Server Error
+{
+   "error" : "Not Found"
+}
+```
+## <a name='crear-evento'></a> Crear Evento
+[Back to top](#top)
+
+<p>Crea un Evento.</p>
+
+	POST /v1/evento
+
+
+
+### Examples
+
+Evento
+
+```
+{
+  "id": "Id Evento"
+}
+```
+Header Autorización
+
+```
+Authorization=bearer {token}
+```
+
+
+### Success Response
+
+Evento
+
+```
+{
+  "id": "Id del evento"
+  "titulo": "Nombre del evento",
+  "descripcion": "Descripción del evento",
+  "fechaEvento": date (DD/MM/YYYY),
+  "lugarEvento": "Lugar en donde se llevará a cabo el evento"
+}
+```
+
+
+### Error Response
+
+401 Unauthorized
+
+```
+HTTP/1.1 401 Unauthorized
+```
+400 Bad Request
+
+```
+HTTP/1.1 400 Bad Request
+{
+   "messages" : [
+     {
+       "path" : "{Nombre de la propiedad}",
+       "message" : "{Motivo del error}"
+     },
+     ...
+  ]
+}
+```
+500 Server Error
+
+```
+HTTP/1.1 500 Internal Server Error
+{
+   "error" : "Not Found"
+}
+```
+## <a name='eliminar-evento'></a> Eliminar Evento
+[Back to top](#top)
+
+<p>Eliminar un Evento.</p>
+
+	DELETE /v1/evento/:eventoId
+
+
+
+### Examples
+
+Header Autorización
+
+```
+Authorization=bearer {token}
+```
+
+
+### Success Response
+
+Response
+
+```
+HTTP/1.1 200 OK
+```
+
+
+### Error Response
+
+401 Unauthorized
+
+```
+HTTP/1.1 401 Unauthorized
+```
+500 Server Error
+
+```
+HTTP/1.1 500 Internal Server Error
+{
+   "error" : "Not Found"
+}
+```
+## <a name='guardar-imagen-del-evento'></a> Guardar Imagen del Evento
+[Back to top](#top)
+
+<p>Guarda una imagen del evento en la db y actualiza el evento</p>
+
+	POST /v1/evento/:eventoId/picture
+
+
+
+### Examples
+
+Body
+
+```
+{
+  "image" : "Base 64 Image Text"
+}
+```
+Header Autorización
+
+```
+Authorization=bearer {token}
+```
+
+
+### Success Response
+
+Response
+
+```
+{
+  "id": "id de imagen"
+}
+```
+
+
+### Error Response
+
+401 Unauthorized
+
+```
+HTTP/1.1 401 Unauthorized
+```
+400 Bad Request
+
+```
+HTTP/1.1 400 Bad Request
+{
+   "messages" : [
+     {
+       "path" : "{Nombre de la propiedad}",
+       "message" : "{Motivo del error}"
+     },
+     ...
+  ]
+}
+```
+500 Server Error
+
+```
+HTTP/1.1 500 Internal Server Error
+{
+   "error" : "Not Found"
+}
+```
 # <a name='imagen'></a> Imagen
 
 ## <a name='guardar-imagen'></a> Guardar Imagen

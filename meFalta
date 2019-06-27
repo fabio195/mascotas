@@ -1,0 +1,10 @@
+en el back:
+
+update evento picture  recibe una imagen  post   http://localhost:3000/v1/evento/picture/
+
+
+
+
+en el front:
+
+mostrar bien bonito el evento

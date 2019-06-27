@@ -1,13 +1,8 @@
 import React from "react";
-import { connect } from "react-redux";
-import { changePassword, IChangePassword } from "../../api/userApi";
+import { changePassword } from "../../api/userApi";
 import "../../styles.css";
 import CommonComponent, { ICommonProps } from "../../tools/CommonComponent";
 import ErrorLabel from "../../tools/ErrorLabel";
-
-interface IProps extends ICommonProps {
-    changePassword(payload: IChangePassword): Promise<void>;
-}
 
 interface IState {
     currentPassword: string;
@@ -15,8 +10,8 @@ interface IState {
     newPassword2: string;
 }
 
-class StatePassword extends CommonComponent<IProps, IState> {
-    constructor(props: IProps) {
+export default class Password extends CommonComponent<ICommonProps, IState> {
+    constructor(props: ICommonProps) {
         super(props);
 
         this.state = {
@@ -44,7 +39,7 @@ class StatePassword extends CommonComponent<IProps, IState> {
         }
 
         try {
-            await this.props.changePassword(this.state);
+            await changePassword(this.state);
             this.props.history.push("/");
         } catch (error) {
             this.processRestValidations(error);
@@ -99,14 +94,3 @@ class StatePassword extends CommonComponent<IProps, IState> {
         );
     }
 }
-
-const Password = connect(
-    null,
-    (dispatch) => {
-        return {
-            changePassword: (payload: IChangePassword) => changePassword(payload),
-        };
-    },
-)(StatePassword);
-
-export default Password;

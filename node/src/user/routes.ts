@@ -105,6 +105,7 @@ async function signUp(req: express.Request, res: express.Response) {
 async function login(req: express.Request, res: express.Response) {
   const userId = await user.login(req.body);
   const tokenString = await token.create(userId);
+  console.log("token: " +  tokenString );
   res.json({ token: tokenString });
 }
 

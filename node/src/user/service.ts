@@ -201,7 +201,7 @@ export async function hasPermission(userId: string, permission: string): Promise
         }
 
         if (!user.hasPermission(permission)) {
-            throw error.newError(error.ERROR_UNAUTHORIZED, "Accesos insuficientes");
+            throw error.newError(error.ERROR_INVALID_CREDENTIALS, "Accesos insuficientes");
         }
         return Promise.resolve();
     } catch (err) {

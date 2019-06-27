@@ -1,16 +1,12 @@
 import React from "react";
-import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { logout } from "../../store/sessionStore";
+import { ICommonProps } from "../../tools/CommonComponent";
 import "./Menu.css";
 
-interface IProps {
-  logout: () => Promise<void>;
-}
-
-class StateMainMenu extends React.Component<IProps, any> {
+export default class MainMenu extends React.Component<ICommonProps, any> {
   public logout = async () => {
-    await this.props.logout();
+    await logout();
   }
 
   public render() {
@@ -25,17 +21,10 @@ class StateMainMenu extends React.Component<IProps, any> {
 
         <h6 className="menu_section">Mascotas</h6>
         <NavLink to="/pets" className="menu_item btn btn-sm btn-link">Lista</NavLink><br />
+        <br></br>
+        <h6 className="menu_section">Eventos</h6>
+        <NavLink to="/verEventos" className="menu_item btn btn-sm btn-link">Ver eventos</NavLink><br />
       </div>
     );
   }
 }
-
-const MainMenu = connect(
-  null,
-  () => {
-    return {
-      logout: () => logout(),
-    };
-  })(StateMainMenu);
-
-export default MainMenu;

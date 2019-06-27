@@ -5,6 +5,7 @@ import { NextFunction } from "express-serve-static-core";
 import * as mongoose from "mongoose";
 
 export const ERROR_UNAUTHORIZED = 401;
+export const ERROR_INVALID_CREDENTIALS = 403;
 export const ERROR_NOT_FOUND = 404;
 export const ERROR_BAD_REQUEST = 400;
 export const ERROR_INTERNAL_ERROR = 500;

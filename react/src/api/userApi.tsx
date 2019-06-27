@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { logout as sessionLogout } from "../store/sessionStore";
 
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
@@ -22,9 +23,10 @@ export async function logout(): Promise<void> {
 
     try {
         await axios.get("http://localhost:3000/v1/user/signout");
+        axios.defaults.headers.common.Authorization = "";
         return Promise.resolve();
     } catch (err) {
-        return Promise.reject(err);
+        return Promise.resolve();
     }
 }
 
@@ -60,6 +62,9 @@ export async function reloadCurrentUser(): Promise<IUser> {
         localStorage.setItem("user", res.data);
         return Promise.resolve(res.data);
     } catch (err) {
+        if ((err as AxiosError) && err.response && err.response.status === 401) {
+            sessionLogout();
+        }
         return Promise.reject(err);
     }
 }
@@ -90,10 +95,13 @@ export async function changePassword(payload: IChangePassword): Promise<void> {
         const res = await axios.post("http://localhost:3000/v1/user/password", payload);
         return Promise.resolve(res.data);
     } catch (err) {
+        if ((err as AxiosError) && err.response && err.response.status === 401) {
+            sessionLogout();
+        }
         return Promise.reject(err);
     }
 }
 
 if (getCurrentToken()) {
-    setCurrentToken(getCurrentToken() as string);
+    axios.defaults.headers.common.Authorization = "bearer " + getCurrentToken();
 }

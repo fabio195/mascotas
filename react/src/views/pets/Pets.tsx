@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 import { IPet, loadPets } from "../../api/petsApi";
 import "../../styles.css";
 import CommonComponent, { ICommonProps } from "../../tools/CommonComponent";
@@ -8,12 +7,8 @@ interface IState {
     pets: IPet[];
 }
 
-interface IProps extends ICommonProps {
-    loadPets(): Promise<IPet[]>;
-}
-
-class StatePets extends CommonComponent<IProps, IState> {
-    constructor(props: IProps) {
+export default class Pets extends CommonComponent<ICommonProps, IState> {
+    constructor(props: ICommonProps) {
         super(props);
 
         this.state = {
@@ -25,7 +20,7 @@ class StatePets extends CommonComponent<IProps, IState> {
 
     public loadPets = async () => {
         try {
-            const result = await this.props.loadPets();
+            const result = await loadPets();
             this.setState({
                 pets: result,
             });
@@ -80,14 +75,3 @@ class StatePets extends CommonComponent<IProps, IState> {
         );
     }
 }
-
-const Pets = connect(
-    null,
-    (dispatch) => {
-        return {
-            loadPets: () => loadPets(),
-        };
-    },
-)(StatePets);
-
-export default Pets;

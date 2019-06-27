@@ -1,20 +1,11 @@
 import React from "react";
-import { connect } from "react-redux";
 // tslint:disable-next-line:max-line-length
-import { getCurrentProfile, getPictureUrl, IProfile, IUpdateBasicProfile, IUpdateProfileImage, IUpdateProfileImageId, updateBasicInfo, updateProfilePicture } from "../../api/profileApi";
+import { getCurrentProfile, getPictureUrl, updateBasicInfo, updateProfilePicture } from "../../api/profileApi";
 import { getProvinces, IProvince } from "../../api/provincesApi";
 import "../../styles.css";
 import CommonComponent, { ICommonProps } from "../../tools/CommonComponent";
 import ErrorLabel from "../../tools/ErrorLabel";
 import ImageUpload from "../../tools/ImageUpload";
-
-interface IProps extends ICommonProps {
-    updateBasicInfo(payload: IUpdateBasicProfile): Promise<IProfile>;
-    getCurrentProfile(): Promise<IProfile>;
-    getProvinces(): Promise<IProvince[]>;
-    getPictureUrl(id: string): string;
-    updateProfilePicture(payload: IUpdateProfileImage): Promise<IUpdateProfileImageId>;
-}
 
 interface IState {
     name: string;
@@ -26,8 +17,8 @@ interface IState {
     provinces: IProvince[];
 }
 
-class StateProfile extends CommonComponent<IProps, IState> {
-    constructor(props: IProps) {
+export default class Profile extends CommonComponent<ICommonProps, IState> {
+    constructor(props: ICommonProps) {
         super(props);
 
         this.state = {
@@ -46,7 +37,7 @@ class StateProfile extends CommonComponent<IProps, IState> {
 
     public async getProvinces() {
         try {
-            const result = await this.props.getProvinces();
+            const result = await getProvinces();
             this.setState({
                 provinces: result,
             });
@@ -57,7 +48,7 @@ class StateProfile extends CommonComponent<IProps, IState> {
 
     public async loadProfile() {
         try {
-            const result = await this.props.getCurrentProfile();
+            const result = await getCurrentProfile();
             this.setState(result);
         } catch (error) {
             this.processRestValidations(error);
@@ -66,7 +57,7 @@ class StateProfile extends CommonComponent<IProps, IState> {
 
     public uploadPicture = async (image: string) => {
         try {
-            const result = await this.props.updateProfilePicture({
+            const result = await updateProfilePicture({
                 image,
             });
             this.setState({
@@ -91,7 +82,7 @@ class StateProfile extends CommonComponent<IProps, IState> {
         }
 
         try {
-            await this.props.updateBasicInfo(
+            await updateBasicInfo(
                 {
                     address: this.state.address,
                     email: this.state.email,
@@ -184,18 +175,3 @@ class StateProfile extends CommonComponent<IProps, IState> {
         );
     }
 }
-
-const Profile = connect(
-    null,
-    (dispatch) => {
-        return {
-            getCurrentProfile: () => getCurrentProfile(),
-            getPictureUrl: (id: string) => getPictureUrl(id),
-            getProvinces: () => getProvinces(),
-            updateBasicInfo: (payload: IUpdateBasicProfile) => updateBasicInfo(payload),
-            updateProfilePicture: (payload: IUpdateProfileImage) => updateProfilePicture(payload),
-        };
-    },
-)(StateProfile);
-
-export default Profile;

@@ -78,4 +78,8 @@ export default class CommonComponent<P extends ICommonProps, S> extends React.Co
     protected goHome = () => {
         this.props.history.push("/");
     }
+
+    protected goBack = () => {
+        this.props.history.goBack();
+    }
 }

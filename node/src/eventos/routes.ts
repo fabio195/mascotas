@@ -4,6 +4,7 @@ import * as express from "express";
 import { onlyLoggedIn } from "../token/passport";
 import { ISessionRequest } from "../user/service";
 import * as service from "./service";
+import * as imageService from "../image/service";
 
 /**
  * Modulo de eventos de usuario
@@ -11,20 +12,37 @@ import * as service from "./service";
 export function initModule(app: express.Express) {
     // Rutas de acceso a eventos
     app
-      .route("/v1/eventos")
+      .route("/v1/evento")
       .get(onlyLoggedIn, findByCurrentUser)
       .post(onlyLoggedIn, create);
 
     app
-      .route("/v1/evento/:petId")
+      .route("/v1/evento/:eventoId")
       .get(onlyLoggedIn, readById)
       .post(onlyLoggedIn, updateById)
       .delete(onlyLoggedIn, removeById);
+    app
+      .route("/v1/evento/:eventoId/picture")
+      .post(onlyLoggedIn, updateEventPicture);
 }
+
+/**
+ * @apiDefine IEventoResponse
+ *
+ * @apiSuccessExample {json} Evento
+ *    {
+ *      "id": "Id del evento"
+ *      "titulo": "Nombre del evento",
+ *      "descripcion": "Descripción del evento",
+ *      "fechaEvento": "Fecha del eventos",
+ *      "lugarEvento": "Lugar en donde se llevará a cabo el evento"
+ *    }
+ */
 
 /**
  * @api {get} /v1/eventos Listar Eventos
  * @apiName Listar Eventos
+ * @apiDefine name Eventos
  * @apiGroup Eventos
  *
  * @apiDescription Obtiene un listado de los eventos habilitados del usuario actual.
@@ -35,14 +53,12 @@ export function initModule(app: express.Express) {
  *      "id": "Id del evento"
  *      "titulo": "Nombre del evento",
  *      "descripcion": "Descripción del evento",
- *      "fechaEvento": date (DD/MM/YYYY),
+ *      "fechaEvento": "Fecha del eventos",
  *      "lugarEvento": "Lugar en donde se llevará a cabo el evento"
  *    }, ...
  *  ]
  *
- * @apiUse AuthHeader
- * @apiUse 200OK
- * @apiUse OtherErrors
+ *
  */
 
 async function findByCurrentUser(req: ISessionRequest, res: express.Response) {
@@ -53,13 +69,14 @@ async function findByCurrentUser(req: ISessionRequest, res: express.Response) {
         titulo: evento.titulo,
         descripcion: evento.descripcion,
         fechaEvento: evento.fechaEvento,
-        lugarEvento: evento.lugarEvento
+        lugarEvento: evento.lugarEvento,
+        picture: evento.picture
       };
   }));
 }
 
 /**
- * @api {post} /v1/pet Crear Evento
+ * @api {post} /v1/evento Crear Evento
  * @apiName Crear Evento
  * @apiGroup Eventos
  *
@@ -105,7 +122,8 @@ async function readById(req: ISessionRequest, res: express.Response) {
       titulo: result.titulo,
       descripcion: result.descripcion,
       fechaEvento: result.fechaEvento,
-      lugarEvento: result.lugarEvento
+      lugarEvento: result.lugarEvento,
+      picture: result.picture
     });
 }
 
@@ -121,7 +139,7 @@ async function readById(req: ISessionRequest, res: express.Response) {
  *      "id": "Id del evento"
  *      "titulo": "Nombre del evento",
  *      "descripcion": "Descripción del evento",
- *      "fechaEvento": date (DD/MM/YYYY),
+ *      "fechaEvento": "Fecha del eventos",
  *      "lugarEvento": "Lugar en donde se llevará a cabo el evento"
  *    }
  *
@@ -139,7 +157,8 @@ async function updateById(req: ISessionRequest, res: express.Response) {
       titulo: result.titulo,
       descripcion: result.descripcion,
       fechaEvento: result.fechaEvento,
-      lugarEvento: result.lugarEvento
+      lugarEvento: result.lugarEvento,
+      picture: result.picture
     });
 }
 
@@ -158,4 +177,36 @@ async function updateById(req: ISessionRequest, res: express.Response) {
 async function removeById(req: ISessionRequest, res: express.Response) {
     await service.remove(req.user.user_id, req.params.eventoId);
     res.send();
+}
+
+/**
+ * @api {post} /v1/evento/:eventoId/picture Guardar Imagen del Evento
+ * @apiName Guardar Imagen del Evento
+ * @apiGroup Eventos
+ *
+ * @apiDescription Guarda una imagen del evento en la db y actualiza el evento
+ *
+ * @apiExample {json} Body
+ *    {
+ *      "image" : "Base 64 Image Text"
+ *    }
+ *
+ * @apiSuccessExample {json} Response
+ *    {
+ *      "id": "id de imagen"
+ *    }
+ *
+ * @apiUse AuthHeader
+ * @apiUse ParamValidationErrors
+ * @apiUse OtherErrors
+ */
+
+async function updateEventPicture(req: ISessionRequest, res: express.Response) {
+  const imageResult = await imageService.create(req.body);
+  console.log("user id: ", req.user.user_id);
+  const eventoResult = await service.updateEventPicture(req.user.user_id, req.params.eventoId, imageResult.id);
+
+  res.json({
+    id: eventoResult.picture
+  });
 }

@@ -4,6 +4,10 @@
     "description": "Mascotas - Programación Avanzada",
     "author": "Nestor Marsollier",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
     "scripts": {
         "start": "npm run build && npm run watch",
         "build": "npm run build-ts && npm run tslint && npm run apidoc && npm run apidocmd",

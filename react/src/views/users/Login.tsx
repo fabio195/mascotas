@@ -1,22 +1,16 @@
 import React from "react";
-import { connect } from "react-redux";
-import { ILogin, IUser } from "../../api/userApi";
 import { login } from "../../store/sessionStore";
 import "../../styles.css";
 import CommonComponent, { ICommonProps } from "../../tools/CommonComponent";
 import ErrorLabel from "../../tools/ErrorLabel";
-
-interface IProps extends ICommonProps {
-    login(payload: ILogin): Promise<IUser>;
-}
 
 interface IState {
     login: string;
     password: string;
 }
 
-class StateLogin extends CommonComponent<IProps, IState> {
-    constructor(props: IProps) {
+export default class Login extends CommonComponent<ICommonProps, IState> {
+    constructor(props: ICommonProps) {
         super(props);
 
         this.state = {
@@ -40,7 +34,7 @@ class StateLogin extends CommonComponent<IProps, IState> {
         }
 
         try {
-            await this.props.login(this.state);
+            await login(this.state);
             this.props.history.push("/");
         } catch (error) {
             this.processRestValidations(error);
@@ -86,14 +80,3 @@ class StateLogin extends CommonComponent<IProps, IState> {
         );
     }
 }
-
-const Login = connect(
-    null,
-    (dispatch) => {
-        return {
-            login: (user: ILogin) => login(user),
-        };
-    },
-)(StateLogin);
-
-export default Login;

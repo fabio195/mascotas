@@ -1,14 +1,8 @@
 import React from "react";
-import { connect } from "react-redux";
-import { ISignUpRequest, IUser } from "../../api/userApi";
 import { newUser } from "../../store/sessionStore";
 import "../../styles.css";
 import CommonComponent, { ICommonProps } from "../../tools/CommonComponent";
 import ErrorLabel from "../../tools/ErrorLabel";
-
-interface IProps extends ICommonProps {
-    newUser(payload: ISignUpRequest): Promise<IUser>;
-}
 
 interface IState {
     login: string;
@@ -17,8 +11,8 @@ interface IState {
     password2: string;
 }
 
-class StateRegister extends CommonComponent<IProps, IState> {
-    constructor(props: IProps) {
+export default class Register extends CommonComponent<ICommonProps, IState> {
+    constructor(props: ICommonProps) {
         super(props);
 
         this.state = {
@@ -50,7 +44,7 @@ class StateRegister extends CommonComponent<IProps, IState> {
         }
 
         try {
-            await this.props.newUser(this.state);
+            await newUser(this.state);
             this.props.history.push("/");
         } catch (error) {
             this.processRestValidations(error);
@@ -114,14 +108,3 @@ class StateRegister extends CommonComponent<IProps, IState> {
         );
     }
 }
-
-const Register = connect(
-    null,
-    (dispatch) => {
-        return {
-            newUser: (user: ISignUpRequest) => newUser(user),
-        };
-    },
-)(StateRegister);
-
-export default Register;

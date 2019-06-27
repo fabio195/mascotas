@@ -5,11 +5,12 @@ import * as mongoose from "mongoose";
 export interface IEvento extends mongoose.Document {
     titulo: String;
     descripcion: String;
-    fechaCreacion: Number;
-    fechaEvento: Date;
+    fechaCreacion: Date;
+    fechaEvento: String;
     lugarEvento: String;
     creador: mongoose.Schema.Types.ObjectId;
     enabled: Boolean;
+    picture: String;
 }
 
 /**
@@ -30,12 +31,12 @@ export let schemaEvento = new mongoose.Schema({
         required: "Añada una descripción al evento"
     },
     fechaCreacion: {
-        type: Number,
-        default: "",
+        type: Date,
+        default: Date.now(),
         trim: true,
     },
     fechaEvento: {
-        type: Date,
+        type: String,
         default: "",
         trim: true,
         required: "La fecha del evento es requerida"
@@ -55,13 +56,17 @@ export let schemaEvento = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    picture: {
+        type: String,
+        default: "",
+    }
 }, {collection: "eventos" });
 
 /**
  * Antes de guardar
  */
 schemaEvento.pre("save", function (this: IEvento, next) {
-    this.fechaCreacion = Date.now();
+    this.fechaCreacion = new Date();
     next();
   });
 
