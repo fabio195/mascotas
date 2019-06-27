@@ -1,5 +1,7 @@
 # Proyecto Mascotas - Programación Avanzada
 
+Author: https://github.com/nmarsollier
+
 Proyecto Red social de Mascotas, ejemplo de código para la cátedra "Programación Avanzada" en la Universidad Tecnología Nacional, Facultad Regional Mendoza.
 
 Este proyecto es un ejemplo de como armar un proyecto Node 6 con Typescript como backend, y React como frontend.
